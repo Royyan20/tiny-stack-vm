@@ -27,11 +27,12 @@ function run(p: Uint8Array, inp: Uint8Array): { o: Uint8Array; c: number } {
     const op = p[pc];
     const t = T[op];
     if (!t) return done(5);
-    if (pc + t[0] >= n) return done(9);
+    const imm = t[0], pops = t[1], pushes = t[2];
+    if (pc + imm >= n) return done(9);
     steps++;
-    const nx = pc + 1 + t[0];
-    if (sp < t[1]) return done(2);
-    if (sp - t[1] + t[2] > 256) return done(3);
+    const nx = pc + 1 + imm;
+    if (sp < pops) return done(2);
+    if (sp - pops + pushes > 256) return done(3);
     pc = nx;
     switch (op) {
       case 0:
